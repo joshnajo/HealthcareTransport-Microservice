@@ -14,9 +14,15 @@ public partial class Program
         builder.Services.AddDbContext<AppDbContext>(
             options => options.UseInMemoryDatabase("InMemoryDb"));
 
+        // Registering the repository for dependency injection
         builder.Services.AddScoped<IMemberRepo, MemberRepo>();
 
+        // Adding controllers
         builder.Services.AddControllers();
+
+        // Adding AutoMapper
+        builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
