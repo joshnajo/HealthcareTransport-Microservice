@@ -1,7 +1,14 @@
+using MemberService.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+// Configuring the DbContext to use an in-memory database for development and testing purposes
+builder.Services.AddDbContext<AppDbContext>(
+    options => options.UseInMemoryDatabase("InMemoryDb"));
+    
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
