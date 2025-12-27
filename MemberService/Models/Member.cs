@@ -23,6 +23,6 @@ namespace MemberService.Models
         public string Phone { get; set; } = string.Empty;
 
         [Required]
-        public string HealthPlanId { get; set; } = string.Empty;
+        public string HealthPlanName { get; set; } = string.Empty;
     }
 } 
