@@ -14,6 +14,12 @@ public partial class Program
         builder.Services.AddDbContext<AppDbContext>(
             options => options.UseInMemoryDatabase("InMemoryDb"));
 
+        // // Add this for Docker
+        // builder.WebHost.ConfigureKestrel(options =>
+        // {
+        //     options.ListenAnyIP(8088);
+        // });
+
         // Registering the repository for dependency injection
         builder.Services.AddScoped<IMemberRepo, MemberRepo>();
 
@@ -67,6 +73,7 @@ public partial class Program
             app.MapOpenApi();
         }
 
+        // Commenting out HTTPS redirection for simplicity in local development
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
