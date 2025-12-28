@@ -1,5 +1,5 @@
 using AutoMapper;
-using AutoMapper.Execution;
+using Member = MemberService.Models.Member;
 using MemberService.Dtos;
 
 namespace  MemberService.Profiles
@@ -9,7 +9,7 @@ namespace  MemberService.Profiles
         public MembersProfile()
         {
             // Source -> Target
-            
+
             //source is my model to target is my Member DTO
             // No need to manually map properties with the same names; AutoMapper handles that automatically.
             CreateMap<Member,MemberReadDto>();

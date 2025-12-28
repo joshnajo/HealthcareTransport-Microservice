@@ -21,6 +21,7 @@ namespace MemberService.Controllers
         }
 
         // GET api/members
+        // http://localhost:5279/api/members
         [HttpGet]
         public ActionResult<IEnumerable<MemberReadDto>> GetAllMembers()
         {
@@ -32,7 +33,8 @@ namespace MemberService.Controllers
         }
 
         // GET api/members/{id}
-        [HttpGet("{id}")]
+        // http://localhost:5279/api/members/2
+        [HttpGet("{id}", Name = "GetMemberById")]
         public ActionResult<MemberReadDto> GetMemberById(int id)
         {
             var member = _memberRepo.GetMemberById(id);
@@ -45,6 +47,8 @@ namespace MemberService.Controllers
             return Ok(memberDTO);
         }
 
+        // POST api/members
+        [HttpPost]
         public ActionResult<MemberReadDto> CreateMember(MemberCreateDto memberToCreateDto)
         {
             // uses this mapping CreateMap<MemberCreateDto,Member>() in MembersProfile.cs
@@ -57,6 +61,8 @@ namespace MemberService.Controllers
 
             var memberReadDto = _mapper.Map<MemberReadDto>(member);
 
+            // Returns a 201 response with a Location header pointing to the newly created resource
+            // GetMemberById is the name of the route defined in the HttpGet attribute above 
             return CreatedAtRoute(
                 nameof(GetMemberById), 
                 new { Id = memberReadDto.Id }, 
