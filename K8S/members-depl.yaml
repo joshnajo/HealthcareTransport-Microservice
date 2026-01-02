@@ -1,0 +1,28 @@
+# Deployment configuration for the memberservice application
+# api version this deployment uses - apps/v1 - Kubernetes works with rest api to create and destroy it's own resources
+apiVersion: apps/v1
+
+# we are deploying into kubernetes a Deployment resource
+kind: Deployment
+
+# Name of the Deployment
+metadata:
+  name: members-depl
+spec:
+# Number of desired pod replicas
+  replicas: 1 
+  # Selector to select/identify the pods managed by this deployment
+  selector: 
+    matchLabels:
+      app: memberservice
+      # template for the pods created by this deployment
+      # selector must match the labels defined in the pod template
+  template:
+    metadata:
+      labels:
+        app: memberservice
+        # Pod specification, selector and pod name must match the container name defined below
+    spec:
+      containers:
+        - name: memberservice
+          image: joshna5/memberservice:latest #docker image for the container
