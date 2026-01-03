@@ -1,6 +1,6 @@
 using MemberService.Data;
+using MemberService.SyncDataService.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi;
 
 public partial class Program
 {
@@ -23,12 +23,19 @@ public partial class Program
         // Registering the repository for dependency injection
         builder.Services.AddScoped<IMemberRepo, MemberRepo>();
 
+        // Registering the HTTP client for Trip data client
+        builder.Services.AddHttpClient<ITripDataClient, HttpTripDataClient>();
+
         // Adding controllers
         builder.Services.AddControllers();
 
         // Adding AutoMapper
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+        // access configuration settings
+        var configuration = builder.Configuration["TripService:BaseUrl"];
+        Console.WriteLine($"TripService endpoint {configuration}");
+        
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
@@ -81,5 +88,7 @@ public partial class Program
         app.MapControllers();
 
         app.Run();
+
+        
     }
 }

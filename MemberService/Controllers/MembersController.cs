@@ -2,6 +2,7 @@ using AutoMapper;
 using MemberService.Data;
 using MemberService.Dtos;
 using MemberService.Models;
+using MemberService.SyncDataService.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MemberService.Controllers
@@ -13,11 +14,13 @@ namespace MemberService.Controllers
     {
         private readonly IMemberRepo _memberRepo;
         private readonly IMapper _mapper;
+        private readonly ITripDataClient _tripDataClient;
 
-        public MembersController(IMemberRepo memberRepo, IMapper mapper)
+        public MembersController(IMemberRepo memberRepo, IMapper mapper, ITripDataClient tripDataClient)
         {
             _memberRepo = memberRepo;
             _mapper = mapper;
+            _tripDataClient = tripDataClient;
         }
 
         // GET api/members
@@ -49,7 +52,7 @@ namespace MemberService.Controllers
 
         // POST api/members
         [HttpPost]
-        public ActionResult<MemberReadDto> CreateMember(MemberCreateDto memberToCreateDto)
+        public async Task<ActionResult<MemberReadDto>> CreateMember(MemberCreateDto memberToCreateDto)
         {
             // uses this mapping CreateMap<MemberCreateDto,Member>() in MembersProfile.cs
             Console.WriteLine("Creating member...");
@@ -61,6 +64,16 @@ namespace MemberService.Controllers
 
             var memberReadDto = _mapper.Map<MemberReadDto>(member);
 
+            // Send member data to TripService
+            try
+            {
+               await _tripDataClient.SendMemberToTrip(memberReadDto);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"--> Could not send synchronously to TripService: {ex.Message}");
+            }
+            
             // Returns a 201 response with a Location header pointing to the newly created resource
             // GetMemberById is the name of the route defined in the HttpGet attribute above 
             return CreatedAtRoute(
