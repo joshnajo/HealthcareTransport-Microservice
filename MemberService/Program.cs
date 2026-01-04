@@ -10,9 +10,22 @@ public partial class Program
 
         // Add services to the container.
 
-        // Configuring the DbContext to use an in-memory database for development and testing purposes
-        builder.Services.AddDbContext<AppDbContext>(
-            options => options.UseInMemoryDatabase("InMemoryDb"));
+        // Production specific configuration
+        bool isProduction = builder.Environment.IsProduction();
+        if(isProduction)
+        {
+            Console.WriteLine("--> Using MSSQL Db");
+            // Configuring the DbContext to use SQL Server in production environment
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("MembersConnection")));
+        }
+        else
+        {
+            Console.WriteLine("--> Using InMem Db");
+            // Configuring the DbContext to use an in-memory database for development and testing purposes
+            builder.Services.AddDbContext<AppDbContext>(
+                options => options.UseInMemoryDatabase("InMemoryDb"));
+        }
 
         // // Add this for Docker
         // builder.WebHost.ConfigureKestrel(options =>
@@ -42,14 +55,15 @@ public partial class Program
        
         
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApi();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
         var app = builder.Build();
 
         // Console.WriteLine("in program.cs...");
 
         // Seed the in-memory database
-         PrepareDb.PrepPopulation(app); // Call the seeding method
+         PrepareDb.PrepPopulation(app, isProduction); // Call the seeding method
 
         // using (var scope = app.Services.CreateScope())
         // {
@@ -82,7 +96,8 @@ public partial class Program
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
-            app.MapOpenApi();
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
 
         // Commenting out HTTPS redirection for simplicity in local development

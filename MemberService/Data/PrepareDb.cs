@@ -1,4 +1,5 @@
 using MemberService.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace MemberService.Data
 {
@@ -8,12 +9,12 @@ namespace MemberService.Data
         /// Prepares the database by seeding initial data if necessary.
         /// </summary>
         /// <param name="context"></param>
-        public static void PrepPopulation(IApplicationBuilder applicationBuilder)
+        public static void PrepPopulation(IApplicationBuilder applicationBuilder, bool isProduction)
         {
             Console.WriteLine("in PrepPopulation...");
             using (var serviceScope = applicationBuilder.ApplicationServices.CreateScope())
             {
-                SeedData(serviceScope.ServiceProvider.GetService<AppDbContext>());
+                SeedData(serviceScope.ServiceProvider.GetService<AppDbContext>(), isProduction);
             }
             // SeedData(context);
         }
@@ -22,12 +23,27 @@ namespace MemberService.Data
         /// Seeds the database with initial member data if the Members table is empty.
         /// </summary>
         /// <param name="context"></param>
+        /// <param name="isProduction"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        private static void SeedData(AppDbContext? context)
+        private static void SeedData(AppDbContext? context, bool isProduction)
         {
             if (context == null)
             {
                 throw new ArgumentNullException(nameof(context));
+            }
+
+            // Apply migrations if in production
+            if(isProduction)
+            {
+                Console.WriteLine("Attempting to Apply Migrations...");
+                try
+                {
+                    context.Database.Migrate();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Could not run migrations: {ex.Message}");
+                }
             }
 
             if (!context.Members.Any())
