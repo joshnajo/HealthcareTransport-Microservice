@@ -7,37 +7,37 @@ kind: Deployment
 
 # Name of the Deployment
 metadata:
-  name: members-depl
+  name: trips-depl
 spec:
 # Number of desired pod replicas
   replicas: 1 
   # Selector to select/identify the pods managed by this deployment
   selector: 
     matchLabels:
-      app: memberservice
+      app: tripservice
       # template for the pods created by this deployment
       # selector must match the labels defined in the pod template
   template:
     metadata:
       labels:
-        app: memberservice
+        app: tripservice
         # Pod specification, selector and pod name must match the container name defined below
     spec:
       containers:
-        - name: memberservice
-          image: joshna5/memberservice:latest #docker image for the container
+        - name: tripservice
+          image: joshna5/tripservice:latest #docker image for the container
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: members-clusterip-srv
+  name: trips-clusterip-srv
 spec:
   type: ClusterIP
   selector:
-    app: memberservice
+    app: tripservice
   ports:
-    - name: memberservice
+    - name: tripservice
       protocol: TCP
       port: 80 # ClusterIP Service port exposed inside the cluster
       targetPort: 8080 # Service port to which traffic will be forwarded in the pod ← App listens on 8080 for .NET 8+

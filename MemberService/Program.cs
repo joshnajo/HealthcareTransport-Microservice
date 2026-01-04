@@ -23,8 +23,15 @@ public partial class Program
         // Registering the repository for dependency injection
         builder.Services.AddScoped<IMemberRepo, MemberRepo>();
 
+        // Get TripService URL from configuration
+        var tripServiceUrl = builder.Configuration["TripService"] 
+            ?? throw new InvalidOperationException("TripService URL missing");
+                Console.WriteLine($"TripService endpoint {tripServiceUrl}");
+
         // Registering the HTTP client for Trip data client
-        builder.Services.AddHttpClient<ITripDataClient, HttpTripDataClient>();
+        builder.Services.AddHttpClient<ITripDataClient, HttpTripDataClient>(
+            // client => { client.BaseAddress = new Uri(tripServiceUrl);}
+            );
 
         // Adding controllers
         builder.Services.AddControllers();
@@ -32,9 +39,7 @@ public partial class Program
         // Adding AutoMapper
         builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-        // access configuration settings
-        var configuration = builder.Configuration["TripService:BaseUrl"];
-        Console.WriteLine($"TripService endpoint {configuration}");
+       
         
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
