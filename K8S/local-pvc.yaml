@@ -1,3 +1,4 @@
+# add persistent volume claim for mssql from local disk storage class and mount to /var/opt/mssql/data in the mssql container
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:

@@ -1,0 +1,66 @@
+#Deployment for SQL Server 2019 Express Edition
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mssql-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mssql
+  template:
+    metadata:
+      labels:
+        app: mssql
+    spec:
+      containers:
+        - name: mssql
+          image: mcr.microsoft.com/mssql/server:2019-latest # Use the latest SQL Server 2019 image
+          ports:
+            - containerPort: 1433
+          env:
+          - name: MSSQL_PID # Use the Express edition of SQL Server
+            value: "Express"
+          - name: ACCEPT_EULA # Required to accept the EULA agreement for SQL Server images
+            value: "Y"
+          - name: SA_PASSWORD # Set a strong password for the SA user
+            valueFrom:
+              secretKeyRef:
+                name: mssql
+                key: SA_PASSWORD
+          volumeMounts:
+          - mountPath: /var/opt/mssql/data
+            name: mssqldb
+      volumes:
+      - name: mssqldb
+        persistentVolumeClaim:
+          claimName: mssql-claim
+---
+#clusterIP Service for SQL Server
+apiVersion: v1
+kind: Service
+metadata:
+  name: mssql-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: mssql
+  ports:
+    - name: mssql
+      protocol: TCP
+      port: 1433 # ClusterIP Service port exposed inside the cluster
+      targetPort: 1433 # Service port to which traffic will be forwarded in the pod ← App listens on 1433 for SQL Server
+---
+#LoadBalancer Service for SQL Server
+apiVersion: v1
+kind: Service
+metadata:
+  name: mssql-loadbalancer-srv
+spec:
+  type: LoadBalancer
+  selector:
+    app: mssql
+  ports:
+  - protocol: TCP
+    port: 1433 # ClusterIP Service port exposed inside the cluster
+    targetPort: 1433 # Service port to which traffic will be forwarded in the pod ← App listens on 1433 for SQL Server
