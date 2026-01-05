@@ -75,7 +75,7 @@ namespace TripService.Data
         /// <param name="tripId"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public Trip GetTripById(string memberId, int tripId)
+        public Trip GetTripForMember(string memberId, int tripId)
         {
             if(!MemberExists(memberId))
             {

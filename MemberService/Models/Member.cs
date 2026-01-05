@@ -7,10 +7,10 @@ namespace MemberService.Models
         // Entity Framework thinks it's a key because of the name Id. PK is mandatory no neeed to mention all these by default 
         [Key]
         [Required] 
-        public int Id { get; set; } 
+        public int Id { get; set; } // Primary Key
 
         [Required]
-        public string MemberId { get; set; } = string.Empty;
+        public string MemberId { get; set; } = string.Empty; // Unique Member Identifier
 
         [Required]
         public string FirstName { get; set; } = string.Empty;

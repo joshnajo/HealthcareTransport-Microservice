@@ -16,7 +16,7 @@ namespace TripService.Data
 
         // Trip related methods
         IEnumerable<Trip> GetAllTripsForMember(string memberId);
-        Trip GetTripById(string memberId, int tripId);
+        Trip GetTripForMember(string memberId, int tripId);
         void CreateTrip(string memberId, Trip trip);
     }
 }

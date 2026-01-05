@@ -1,10 +1,20 @@
+using Microsoft.EntityFrameworkCore;
+using TripService.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+// In-memory database
+builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMemoryDb"));
+
+// Dependency Injection
+builder.Services.AddScoped<ITripRepo, TripRepo>();
 builder.Services.AddControllers();
 
+// AutoMapper Configuration
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 // builder.Services.AddOpenApi();
 

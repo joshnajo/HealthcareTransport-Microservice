@@ -24,7 +24,7 @@ namespace TripService.Models
         [Required]
         public string Vehicle { get; set; } = string.Empty;
 
-        // Foreign key to Member
+        // Unique identifier for the member who owns this trip
         [Required]
         public string MemberId { get; set; } = string.Empty;
 

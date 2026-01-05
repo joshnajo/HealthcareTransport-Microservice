@@ -17,17 +17,19 @@ namespace TripService.Data
         // For example, setting up one-to-many relationship between Member and Trip
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Tell EF Core that Member.MemberId is a valid key for relationships
             modelBuilder
                 .Entity<Member>()
                 .HasMany(m => m.Trips)
                 .WithOne(t => t.Member)
-                .HasForeignKey(t => t.MemberId);
+                .HasPrincipalKey(t => t.MemberId); // Alternate Key on the Member entity
 
             modelBuilder
                 .Entity<Trip>()
                 .HasOne(t => t.Member)
                 .WithMany(t => t.Trips)
-                .HasForeignKey(t => t.MemberId);
+                .HasForeignKey(t => t.MemberId)  // FK on the Trip entity
+                .HasPrincipalKey(t => t.MemberId); // Key on the Member entity
         }
     }
 }
