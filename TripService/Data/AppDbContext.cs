@@ -10,8 +10,8 @@ namespace TripService.Data
             
         }
 
-        public DbSet<Member> members {get; set;} = null!;   
-        public DbSet<Trip> trips { get; set; } = null!;
+        public DbSet<Member> Members {get; set;} = null!;   
+        public DbSet<Trip> Trips { get; set; } = null!;
 
         // Configure the model relationships here if needed
         // For example, setting up one-to-many relationship between Member and Trip

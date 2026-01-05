@@ -26,7 +26,7 @@ namespace TripService.Models
 
         // Foreign key to Member
         [Required]
-        public int MemberId { get; set; }
+        public string MemberId { get; set; } = string.Empty;
 
         // Navigation property
         public Member Member { get; set; } = null!;

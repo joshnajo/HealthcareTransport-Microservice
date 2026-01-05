@@ -17,7 +17,7 @@ namespace TripService.Models
         [Required]
         public string FirstName { get; set; } = string.Empty;
 
-    [Required]
+        [Required]
         public string LastName { get; set; } = string.Empty;
 
         // Navigation property for related Trips
