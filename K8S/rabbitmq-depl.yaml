@@ -1,0 +1,61 @@
+#Deployment for RabbitMQ in Kubernetes
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: rabbitmq-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata: 
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3-management
+          ports:
+            - containerPort: 15672
+              name: rbmq-mgmt-port
+            - containerPort: 5672
+              name: rbmq-msg-port
+---
+#clusterIP Service for RabbitMQ
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: rabbitmq
+  ports:
+    - name: rbmq-mgmt-port
+      protocol: TCP
+      port: 15672 # ClusterIP Service port exposed inside the cluster
+      targetPort: 15672 # Service port to which traffic will be forwarded in the pod ← App listens on 15672 for RabbitMQ
+    - name: rbmq-msg-port
+      protocol: TCP
+      port: 5672 # ClusterIP Service port exposed inside the cluster
+      targetPort: 5672 # Service port to which traffic will be forwarded in the pod ← App listens on 5672 for RabbitMQ
+---
+#LoadBalancer Service for RabbitMQ
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-loadbalancer-srv
+spec:
+  type: LoadBalancer
+  selector:
+    app: rabbitmq
+  ports:
+  - name: rbmq-mgmt-port
+    protocol: TCP
+    port: 15672 # ClusterIP Service port exposed inside the cluster
+    targetPort: 15672 # Service port to which traffic will be forwarded in the pod ← App listens on 15672 for RabbitMQ
+  - name: rbmq-msg-port
+    protocol: TCP
+    port: 5672 # ClusterIP Service port exposed inside the cluster
+    targetPort: 5672 # Service port to which traffic will be forwarded in the pod ← App listens on 5672 for RabbitMQ
