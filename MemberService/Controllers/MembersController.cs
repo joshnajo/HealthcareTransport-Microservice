@@ -1,4 +1,5 @@
 using AutoMapper;
+using MemberService.AsyncDataServices;
 using MemberService.Data;
 using MemberService.Dtos;
 using MemberService.Models;
@@ -15,12 +16,15 @@ namespace MemberService.Controllers
         private readonly IMemberRepo _memberRepo;
         private readonly IMapper _mapper;
         private readonly ITripDataClient _tripDataClient;
+        private readonly IMessageBusClient _messageBusClient;
 
-        public MembersController(IMemberRepo memberRepo, IMapper mapper, ITripDataClient tripDataClient)
+        public MembersController(IMemberRepo memberRepo, IMapper mapper, ITripDataClient tripDataClient,
+                                 IMessageBusClient messageBusClient)
         {
             _memberRepo = memberRepo;
             _mapper = mapper;
             _tripDataClient = tripDataClient;
+            _messageBusClient = messageBusClient;
         }
 
         // GET api/members
@@ -64,7 +68,7 @@ namespace MemberService.Controllers
 
             var memberReadDto = _mapper.Map<MemberReadDto>(member);
 
-            // Send member data to TripService
+            // Send SYNC MESSAGE USING HTTPS/member data to TripService USING SYNCHRONOUS HTTP
             try
             {
                await _tripDataClient.SendMemberToTrip(memberReadDto);
@@ -73,6 +77,19 @@ namespace MemberService.Controllers
             {
                 Console.WriteLine($"--> Could not send synchronously to TripService: {ex.Message}");
             }
+
+            //SEND MESSAGE ASYNCHRONOUSLY
+            try
+            {
+                var memberPublishedDto = _mapper.Map<MemberPublishedDto>(memberReadDto);
+                memberPublishedDto.Event = "Member_Published";
+                _messageBusClient.PublishNewMember(memberPublishedDto);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"--> Could not send asynchronously to TripService: {ex.Message}");
+            }
+
             
             // Returns a 201 response with a Location header pointing to the newly created resource
             // GetMemberById is the name of the route defined in the HttpGet attribute above 

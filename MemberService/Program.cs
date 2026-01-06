@@ -1,3 +1,4 @@
+using MemberService.AsyncDataServices;
 using MemberService.Data;
 using MemberService.SyncDataService.Http;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,9 @@ public partial class Program
         builder.Services.AddHttpClient<ITripDataClient, HttpTripDataClient>(
             // client => { client.BaseAddress = new Uri(tripServiceUrl);}
             );
+
+        //RabbitMQ Message Bus
+        builder.Services.AddSingleton<IMessageBusClient, MessageBusClient>();
 
         // Adding controllers
         builder.Services.AddControllers();
