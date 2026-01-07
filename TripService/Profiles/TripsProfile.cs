@@ -12,6 +12,9 @@ namespace TripService.Profiles
             CreateMap<Member, MemberReadDto>();
             CreateMap<Trip, TripReadDto>();
             CreateMap<TripCreateDto, Trip>();
+            //Map ExternalId to Id
+            CreateMap<MemberPublishedDto, Member>()
+                .ForMember(dest => dest.ExternalRefId, options => options.MapFrom(src => src.Id));
         }
     }
 }

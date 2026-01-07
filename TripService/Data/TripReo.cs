@@ -52,6 +52,16 @@ namespace TripService.Data
             return _context.Members.Any(m => m.MemberId.Equals(memberId));
         }
 
+        /// <summary>
+        /// Check if member exists based on external ref Id
+        /// </summary>
+        /// <param name="externalMemberId"></param>
+        /// <returns></returns>
+        public bool ExternalMemberExists(int externalMemberId)
+        {
+            return _context.Members.Any(m => m.ExternalRefId == externalMemberId);
+        }
+
         #endregion
 
         #region Trip related methods

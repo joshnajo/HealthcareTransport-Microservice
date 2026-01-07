@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TripService.Data;
+using TripService.EventProcessing;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,7 @@ builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMe
 builder.Services.AddScoped<ITripRepo, TripRepo>();
 builder.Services.AddControllers();
 
+builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
 // AutoMapper Configuration
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

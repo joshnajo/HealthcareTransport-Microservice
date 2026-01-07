@@ -12,6 +12,7 @@ namespace TripService.Data
         IEnumerable<Member> GetAllMembers();
         void CreateMember(Member member);
         bool MemberExists(string memberId);
+        bool ExternalMemberExists(int externalMemberId);
 
 
         // Trip related methods
