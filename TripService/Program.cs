@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TripService.AsyncDataServices;
 using TripService.Data;
 using TripService.EventProcessing;
 
@@ -12,7 +13,7 @@ builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMe
 // Dependency Injection
 builder.Services.AddScoped<ITripRepo, TripRepo>();
 builder.Services.AddControllers();
-
+builder.Services.AddHostedService<MessageBusSubscriber>();
 builder.Services.AddSingleton<IEventProcessor, EventProcessor>();
 // AutoMapper Configuration
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

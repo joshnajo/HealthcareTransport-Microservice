@@ -28,6 +28,7 @@ namespace TripService.EventProcessing
             switch(eventType)
             {
                 case EventType.MemberPublished:
+                    Addmember(message);
                     break;
                 default:
                     break;
@@ -77,6 +78,7 @@ namespace TripService.EventProcessing
                     {
                         tripRepo.CreateMember(member);
                         tripRepo.SaveChanges();
+                        Console.WriteLine($"Member {member.MemberId} added!");
                     }
                     else
                         Console.WriteLine($"Member {member.MemberId} already exists");
