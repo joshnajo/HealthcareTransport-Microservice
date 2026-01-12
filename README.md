@@ -30,6 +30,7 @@ Cloud-Native Non-Emergency Medical Transportation (NEMT) system built with .NET 
 
 \- Entity Framework Core
 
+\- Grpc
 
 
 \## How to Run
