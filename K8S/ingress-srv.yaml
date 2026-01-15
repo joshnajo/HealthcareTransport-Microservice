@@ -17,7 +17,7 @@ spec:
             name: members-clusterip-srv
             port:
               number: 80
-      - path: /api/t/trips # trips service endpoint t added because it doesn't like both same endpoint /api/members
+      - path: /api/t/members # trips service endpoint t added because it doesn't like both same endpoint /api/members
         pathType: Prefix
         backend:
           service:

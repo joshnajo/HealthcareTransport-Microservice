@@ -41,3 +41,7 @@ spec:
       protocol: TCP
       port: 80 # ClusterIP Service port exposed inside the cluster
       targetPort: 8080 # Service port to which traffic will be forwarded in the pod ← App listens on 8080 for .NET 8+
+    - name: membergrpc
+      protocol: TCP
+      port: 666
+      targetPort: 666
