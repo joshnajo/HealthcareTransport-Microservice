@@ -30,4 +30,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Protobuf Include="Protos\members.proto" GrpcServices="Client" />
+  </ItemGroup>
 </Project>

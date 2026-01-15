@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "MemberService";
+
+service GrpcMember {
+    rpc GetAllMembers (GetAllRequest) returns (MemberResponse);
+}
+message GetAllRequest {}
+
+message GrpcMemberModel {
+    int32 memberId = 1;
+    string firstname = 2;
+    string lastname = 3;
+    string phone = 4;
+}
+
+message MemberResponse {
+    repeated GrpcMemberModel member = 1;
+}
