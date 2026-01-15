@@ -9,10 +9,10 @@ message GetAllRequest {}
 
 message GrpcMemberModel {
     int32 memberId = 1;
-    string name = 2;
-    string publisher = 3;
+    string firstname = 2;
+    string lastname = 3;
+    string phone = 4;
 }
-
 
 message MemberResponse {
     repeated GrpcMemberModel member = 1;

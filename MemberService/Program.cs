@@ -1,5 +1,6 @@
 using MemberService.AsyncDataServices;
 using MemberService.Data;
+using MemberService.SyncDataService.Grpc;
 using MemberService.SyncDataService.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,6 +50,9 @@ public partial class Program
 
         //RabbitMQ Message Bus
         builder.Services.AddSingleton<IMessageBusClient, MessageBusClient>();
+
+        // Add Grpc services
+        builder.Services.AddGrpc();
 
         // Adding controllers
         builder.Services.AddControllers();
@@ -105,11 +109,16 @@ public partial class Program
         }
 
         // Commenting out HTTPS redirection for simplicity in local development
-        app.UseHttpsRedirection();
+        // app.UseHttpsRedirection();
 
         app.UseAuthorization();
 
         app.MapControllers();
+        app.MapGrpcService<GrpcMemberService>();
+        app.MapGet("/Protos/members.proto", async context =>
+        {
+            await context.Response.WriteAsync(File.ReadAllText("/Protos/members.proto"));
+        });
 
         app.Run();
 
