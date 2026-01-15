@@ -9,6 +9,7 @@
   <ItemGroup>
     <!-- AutoMapper -->
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.76.0" />
 
     <!-- ASP.NET Core / OpenAPI -->
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
@@ -25,4 +26,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Protobuf Include="Protos\members.proto" GrpcServices="Server" />
+  </ItemGroup>
 </Project>
